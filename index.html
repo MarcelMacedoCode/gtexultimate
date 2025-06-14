@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gtex Ultimate - Gerenciador de Textos Avançado</title>
+    <style>
+        /* Reset e variáveis CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #64748b;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --background: #0f172a;
+            --surface: #1e293b;
+            --border: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        /* Estilos base */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .badge {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Botões */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            background-color: var(--background);
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--surface);
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            justify-content: center;
+        }
+
+        /* Tabs */
+        .tabs {
+            margin: 2rem 0;
+        }
+
+        .tab-list {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .card-content {
+            background-color: var(--background);
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            background-color: var(--background);
+            color: var(--text);
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        /* Busca e filtros */
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .tag-filter {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+            background-color: var(--background);
+        }
+
+        .tag-filter.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--surface);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Estados vazios */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.375rem;
+            color: white;
+            font-weight: 500;
+            z-index: 1100;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--error);
+        }
+
+        /* Estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Cores das etiquetas */
+        .tag-blue { background-color: #3b82f6; color: white; }
+        .tag-green { background-color: #10b981; color: white; }
+        .tag-red { background-color: #ef4444; color: white; }
+        .tag-yellow { background-color: #f59e0b; color: white; }
+        .tag-purple { background-color: #8b5cf6; color: white; }
+        .tag-pink { background-color: #ec4899; color: white; }
+        .tag-indigo { background-color: #6366f1; color: white; }
+        .tag-gray { background-color: #6b7280; color: white; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-controls {
+                justify-content: center;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .card-actions {
+                justify-content: center;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Utilitários */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-muted); }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-4 { margin-top: 1rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .w-full { width: 100%; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Gtex Ultimate</h1>
+                    <span class="badge">IndexedDB</span>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-sm" onclick="showStats()">
+                        📊 Estatísticas
+                    </button>
+                    <button class="btn btn-sm" onclick="exportData()">
+                        💾 Exportar
+                    </button>
+                    <button class="btn btn-sm" onclick="showImportModal()">
+                        📥 Importar
+                    </button>
+                    <button class="btn btn-icon" onclick="toggleTheme()" id="theme-toggle">
+                        🌙
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab-list">
+                <button class="tab-button active" onclick="switchTab('texts')">
+                    📄 Textos (<span id="texts-count">0</span>)
+                </button>
+                <button class="tab-button" onclick="switchTab('tags')">
+                    🏷️ Etiquetas (<span id="tags-count">0</span>)
+                </button>
+            </div>
+
+            <!-- Aba de Textos -->
+            <div id="texts-tab" class="tab-content active">
+                <!-- Busca e filtros -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input 
+                            type="text" 
+                            class="form-input search-input" 
+                            placeholder="Buscar textos..." 
+                            id="search-input"
+                            oninput="performSearch()"
+                        >
+                        
+                        <div class="search-controls">
+                            <select class="form-input" id="sort-select" onchange="applySorting()">
+                                <option value="updatedAt-desc">Mais recentes</option>
+                                <option value="updatedAt-asc">Mais antigos</option>
+                                <option value="title-asc">Título A-Z</option>
+                                <option value="title-desc">Título Z-A</option>
+                                <option value="createdAt-desc">Criação recente</option>
+                                <option value="createdAt-asc">Criação antiga</option>
+                            </select>
+                            
+                            <button class="btn btn-primary" onclick="showTextModal()">
+                                ➕ Novo Texto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros por etiquetas -->
+                    <div class="tag-filters" id="tag-filters">
+                        <span class="text-muted">🏷️ Filtrar por etiquetas:</span>
+                    </div>
+                </div>
+
+                <!-- Lista de textos -->
+                <div id="texts-list">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba de Etiquetas -->
+            <div id="tags-tab" class="tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h2>Gerenciar Etiquetas</h2>
+                    <button class="btn btn-primary" onclick="showTagModal()">
+                        ➕ Nova Etiqueta
+                    </button>
+                </div>
+
+                <div id="tags-list">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Texto -->
+    <div id="text-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="text-modal-title">Novo Texto</h3>
+                <button class="modal-close" onclick="closeModal('text-modal')">&times;</button>
+            </div>
+            
+            <form id="text-form">
+                <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-input" id="text-title" placeholder="Digite o título do texto..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Conteúdo</label>
+                    <textarea class="form-input form-textarea" id="text-content" placeholder="Digite o conteúdo do texto..." required></textarea>
+                    <small class="text-muted">Caracteres: <span id="char-count">0</span></small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Etiquetas</label>
+                    <div id="text-tags" class="tag-filters">
+                        <!-- Etiquetas serão inseridas aqui -->
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeModal('text-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Etiqueta -->
+    <div id="tag-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="tag-modal-title">Nova Etiqueta</h3>
+                <button class="modal-close" onclick="closeModal('tag-modal')">&times;</button>
+            </div>
+            
+            <form id="tag-form">
+                <div class="form-group">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-input" id="tag-name" placeholder="Digite o nome da etiqueta..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Cor</label>
+                    <div class="tag-filters">
+                        <div class="tag-filter tag-blue" data-color="blue" onclick="selectTagColor('blue')">Azul</div>
+                        <div class="tag-filter tag-green" data-color="green" onclick="selectTagColor('green')">Verde</div>
+                        <div class="tag-filter tag-red" data-color="red" onclick="selectTagColor('red')">Vermelho</div>
+                        <div class="tag-filter tag-yellow" data-color="yellow" onclick="selectTagColor('yellow')">Amarelo</div>
+                        <div class="tag-filter tag-purple" data-color="purple" onclick="selectTagColor('purple')">Roxo</div>
+                        <div class="tag-filter tag-pink" data-color="pink" onclick="selectTagColor('pink')">Rosa</div>
+                        <div class="tag-filter tag-indigo" data-color="indigo" onclick="selectTagColor('indigo')">Índigo</div>
+                        <div class="tag-filter tag-gray" data-color="gray" onclick="selectTagColor('gray')">Cinza</div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeModal('tag-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Gerenciar Etiquetas -->
+    <div id="manage-tags-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="manage-tags-title">Gerenciar Etiquetas</h3>
+                <button class="modal-close" onclick="closeModal('manage-tags-modal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Etiquetas disponíveis:</label>
+                <div id="manage-tags-list" class="tag-filters">
+                    <!-- Etiquetas serão inseridas aqui -->
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn" onclick="closeModal('manage-tags-modal')">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveTextTags()">💾 Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Estatísticas -->
+    <div id="stats-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Estatísticas</h3>
+                <button class="modal-close" onclick="closeModal('stats-modal')">&times;</button>
+            </div>
+            
+            <div id="stats-content">
+                <!-- Estatísticas serão inseridas aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Importação -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Importar Dados</h3>
+                <button class="modal-close" onclick="closeModal('import-modal')">&times;</button>
+            </div>
+            
+            <form id="import-form">
+                <div class="form-group">
+                    <label class="form-label">Selecione o arquivo JSON de backup</label>
+                    <input type="file" class="form-input" id="import-file" accept=".json" required>
+                    <small class="text-muted">⚠️ Esta ação substituirá todos os dados existentes</small>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeModal('import-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">📥 Importar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notificação -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Variáveis globais
+        let db;
+        let texts = [];
+        let tags = [];
+        let filteredTexts = [];
+        let selectedTags = [];
+        let editingTextId = null;
+        let editingTagId = null;
+        let selectedTagColor = 'blue';
+
+        // Cores das etiquetas
+        const tagColors = {
+            blue: { class: 'tag-blue', name: 'Azul' },
+            green: { class: 'tag-green', name: 'Verde' },
+            red: { class: 'tag-red', name: 'Vermelho' },
+            yellow: { class: 'tag-yellow', name: 'Amarelo' },
+            purple: { class: 'tag-purple', name: 'Roxo' },
+            pink: { class: 'tag-pink', name: 'Rosa' },
+            indigo: { class: 'tag-indigo', name: 'Índigo' },
+            gray: { class: 'tag-gray', name: 'Cinza' }
+        };
+
+        // Inicialização do IndexedDB
+        async function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('GtexUltimate', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    
+                    // Store de textos
+                    if (!db.objectStoreNames.contains('texts')) {
+                        const textStore = db.createObjectStore('texts', { keyPath: 'id', autoIncrement: true });
+                        textStore.createIndex('title', 'title', { unique: false });
+                        textStore.createIndex('createdAt', 'createdAt', { unique: false });
+                        textStore.createIndex('updatedAt', 'updatedAt', { unique: false });
+                    }
+                    
+                    // Store de etiquetas
+                    if (!db.objectStoreNames.contains('tags')) {
+                        const tagStore = db.createObjectStore('tags', { keyPath: 'id', autoIncrement: true });
+                        tagStore.createIndex('name', 'name', { unique: true });
+                    }
+                };
+            });
+        }
+
+        // Operações de banco de dados
+        async function addText(textData) {
+            const transaction = db.transaction(['texts'], 'readwrite');
+            const store = transaction.objectStore('texts');
+            
+            const text = {
+                ...textData,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            return store.add(text);
+        }
+
+        async function updateText(id, textData) {
+            const transaction = db.transaction(['texts'], 'readwrite');
+            const store = transaction.objectStore('texts');
+            
+            return new Promise((resolve, reject) => {
+                const getRequest = store.get(id);
+                getRequest.onsuccess = () => {
+                    const text = getRequest.result;
+                    if (!text) {
+                        reject(new Error('Texto não encontrado'));
+                        return;
+                    }
+                    
+                    const updatedText = {
+                        ...text,
+                        ...textData,
+                        updatedAt: new Date().toISOString()
+                    };
+                    
+                    const putRequest = store.put(updatedText);
+                    putRequest.onsuccess = () => resolve(putRequest.result);
+                    putRequest.onerror = () => reject(putRequest.error);
+                };
+                getRequest.onerror = () => reject(getRequest.error);
+            });
+        }
+
+        async function deleteText(id) {
+            const transaction = db.transaction(['texts'], 'readwrite');
+            const store = transaction.objectStore('texts');
+            return store.delete(id);
+        }
+
+        async function getTextById(id) {
+            const transaction = db.transaction(['texts'], 'readonly');
+            const store = transaction.objectStore('texts');
+            return new Promise((resolve, reject) => {
+                const request = store.get(id);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllTexts() {
+            const transaction = db.transaction(['texts'], 'readonly');
+            const store = transaction.objectStore('texts');
+            return new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function addTag(tagData) {
+            const transaction = db.transaction(['tags'], 'readwrite');
+            const store = transaction.objectStore('tags');
+            
+            const tag = {
+                ...tagData,
+                createdAt: new Date().toISOString()
+            };
+            
+            return store.add(tag);
+        }
+
+        async function updateTag(id, tagData) {
+            const transaction = db.transaction(['tags'], 'readwrite');
+            const store = transaction.objectStore('tags');
+            
+            const tag = await getTagById(id);
+            const updatedTag = {
+                ...tag,
+                ...tagData,
+                updatedAt: new Date().toISOString()
+            };
+            
+            return store.put(updatedTag);
+        }
+
+        async function getTagById(id) {
+            const transaction = db.transaction(['tags'], 'readonly');
+            const store = transaction.objectStore('tags');
+            return new Promise((resolve, reject) => {
+                const request = store.get(id);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteTag(id) {
+            const transaction = db.transaction(['tags'], 'readwrite');
+            const store = transaction.objectStore('tags');
+            return store.delete(id);
+        }
+
+        async function getAllTags() {
+            const transaction = db.transaction(['tags'], 'readonly');
+            const store = transaction.objectStore('tags');
+            return new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Funções de interface
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function switchTab(tabName) {
+            // Atualizar botões
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Atualizar conteúdo
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            if (tabName === 'tags') {
+                renderTags();
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('gtex-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('gtex-theme', 'dark');
+            }
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            
+            // Limpar formulários
+            if (modalId === 'text-modal') {
+                document.getElementById('text-form').reset();
+                document.getElementById('char-count').textContent = '0';
+                editingTextId = null;
+                document.getElementById('text-modal-title').textContent = 'Novo Texto';
+                updateTextTagsDisplay();
+            } else if (modalId === 'tag-modal') {
+                document.getElementById('tag-form').reset();
+                editingTagId = null;
+                selectedTagColor = 'blue';
+                document.getElementById('tag-modal-title').textContent = 'Nova Etiqueta';
+                updateTagColorSelection();
+            }
+        }
+
+        function showTextModal(textId = null) {
+            if (textId) {
+                const text = texts.find(t => t.id === textId);
+                if (text) {
+                    editingTextId = textId;
+                    document.getElementById('text-title').value = text.title;
+                    document.getElementById('text-content').value = text.content;
+                    document.getElementById('text-modal-title').textContent = 'Editar Texto';
+                    updateCharCount();
+                    
+                    // Selecionar etiquetas do texto
+                    selectedTags = text.tags ? text.tags.map(tag => tag.id) : [];
+                    updateTextTagsDisplay();
+                }
+            } else {
+                selectedTags = [];
+                updateTextTagsDisplay();
+            }
+            
+            showModal('text-modal');
+        }
+
+        function showTagModal(tagId = null) {
+            if (tagId) {
+                const tag = tags.find(t => t.id === tagId);
+                if (tag) {
+                    editingTagId = tagId;
+                    document.getElementById('tag-name').value = tag.name;
+                    selectedTagColor = tag.color;
+                    document.getElementById('tag-modal-title').textContent = 'Editar Etiqueta';
+                    updateTagColorSelection();
+                }
+            } else {
+                editingTagId = null;
+                selectedTagColor = 'blue';
+                document.getElementById('tag-modal-title').textContent = 'Nova Etiqueta';
+                updateTagColorSelection();
+            }
+            showModal('tag-modal');
+        }
+
+        function showManageTagsModal(textId) {
+            const text = texts.find(t => t.id === textId);
+            if (!text) return;
+            
+            editingTextId = textId;
+            selectedTags = text.tags ? text.tags.map(tag => tag.id) : [];
+            
+            document.getElementById('manage-tags-title').textContent = `Gerenciar Etiquetas - ${text.title}`;
+            updateManageTagsDisplay();
+            showModal('manage-tags-modal');
+        }
+
+        function updateManageTagsDisplay() {
+            const container = document.getElementById('manage-tags-list');
+            container.innerHTML = '';
+            
+            if (tags.length === 0) {
+                container.innerHTML = '<p class="text-muted">Nenhuma etiqueta disponível. Crie etiquetas primeiro.</p>';
+                return;
+            }
+            
+            tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = `tag-filter ${tagColors[tag.color].class} ${selectedTags.includes(tag.id) ? 'active' : ''}`;
+                tagEl.textContent = tag.name;
+                tagEl.onclick = () => toggleManageTag(tag.id);
+                container.appendChild(tagEl);
+            });
+        }
+
+        function toggleManageTag(tagId) {
+            if (selectedTags.includes(tagId)) {
+                selectedTags = selectedTags.filter(id => id !== tagId);
+            } else {
+                selectedTags.push(tagId);
+            }
+            updateManageTagsDisplay();
+        }
+
+        async function saveTextTags() {
+            if (!editingTextId) return;
+            
+            try {
+                const text = texts.find(t => t.id === editingTextId);
+                if (!text) {
+                    showNotification('Texto não encontrado!', 'error');
+                    return;
+                }
+                
+                // Atualizar apenas as etiquetas do texto
+                const updatedText = {
+                    ...text,
+                    tagIds: selectedTags,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                // Usar a função updateText corretamente
+                await updateText(editingTextId, updatedText);
+                await loadData();
+                closeModal('manage-tags-modal');
+                showNotification('Etiquetas atualizadas com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar etiquetas:', error);
+                showNotification('Erro ao atualizar etiquetas: ' + error.message, 'error');
+            }
+        }
+
+        function showImportModal() {
+            showModal('import-modal');
+        }
+
+        function updateCharCount() {
+            const content = document.getElementById('text-content').value;
+            document.getElementById('char-count').textContent = content.length;
+        }
+
+        function selectTagColor(color) {
+            selectedTagColor = color;
+            updateTagColorSelection();
+        }
+
+        function updateTagColorSelection() {
+            document.querySelectorAll('[data-color]').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`[data-color="${selectedTagColor}"]`).classList.add('active');
+        }
+
+        function updateTextTagsDisplay() {
+            const container = document.getElementById('text-tags');
+            container.innerHTML = '';
+            
+            tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = `tag-filter ${tagColors[tag.color].class} ${selectedTags.includes(tag.id) ? 'active' : ''}`;
+                tagEl.textContent = tag.name;
+                tagEl.onclick = () => toggleTextTag(tag.id);
+                container.appendChild(tagEl);
+            });
+        }
+
+        function toggleTextTag(tagId) {
+            if (selectedTags.includes(tagId)) {
+                selectedTags = selectedTags.filter(id => id !== tagId);
+            } else {
+                selectedTags.push(tagId);
+            }
+            updateTextTagsDisplay();
+        }
+
+        function performSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            
+            if (!query && selectedTags.length === 0) {
+                filteredTexts = [...texts];
+            } else {
+                filteredTexts = texts.filter(text => {
+                    const matchesQuery = !query || 
+                        text.title.toLowerCase().includes(query) || 
+                        text.content.toLowerCase().includes(query);
+                    
+                    const matchesTags = selectedTags.length === 0 || 
+                        (text.tags && text.tags.some(tag => selectedTags.includes(tag.id)));
+                    
+                    return matchesQuery && matchesTags;
+                });
+            }
+            
+            applySorting();
+        }
+
+        function applySorting() {
+            const sortValue = document.getElementById('sort-select').value;
+            const [field, order] = sortValue.split('-');
+            
+            filteredTexts.sort((a, b) => {
+                let aValue = a[field];
+                let bValue = b[field];
+                
+                if (field === 'title') {
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                } else if (field === 'createdAt' || field === 'updatedAt') {
+                    aValue = new Date(aValue);
+                    bValue = new Date(bValue);
+                }
+                
+                if (order === 'asc') {
+                    return aValue > bValue ? 1 : -1;
+                } else {
+                    return aValue < bValue ? 1 : -1;
+                }
+            });
+            
+            renderTexts();
+        }
+
+        function renderTexts() {
+            const container = document.getElementById('texts-list');
+            
+            if (filteredTexts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <p>Nenhum texto encontrado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredTexts.map(text => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">${text.title}</h3>
+                            <div class="tag-filters mb-2">
+                                ${text.tags ? text.tags.map(tag => `
+                                    <span class="tag-filter ${tagColors[tag.color].class}">${tag.name}</span>
+                                `).join('') : ''}
+                            </div>
+                            <div class="card-meta">
+                                Criado: ${formatDate(text.createdAt)} • 
+                                Modificado: ${formatDate(text.updatedAt)} • 
+                                ${text.content.length} caracteres
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="btn btn-sm" onclick="togglePreview(${text.id})" title="Visualizar">
+                                👁️
+                            </button>
+                            <button class="btn btn-sm" onclick="copyText(${text.id})" title="Copiar">
+                                📋
+                            </button>
+                            <button class="btn btn-sm" onclick="showTextModal(${text.id})" title="Editar">
+                                ✏️
+                            </button>
+                            <button class="btn btn-sm" onclick="showManageTagsModal(${text.id})" title="Gerenciar Etiquetas">
+                                🏷️
+                            </button>
+                            <button class="btn btn-sm" onclick="confirmDeleteText(${text.id})" title="Excluir">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="preview-${text.id}" class="card-content hidden">
+                        ${text.content || 'Sem conteúdo'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTags() {
+            const container = document.getElementById('tags-list');
+            
+            if (tags.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏷️</div>
+                        <p>Nenhuma etiqueta criada ainda</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="tag-filters">
+                    ${tags.map(tag => `
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="tag-filter ${tagColors[tag.color].class}">${tag.name}</span>
+                            <button class="btn btn-sm" onclick="showTagModal(${tag.id})" title="Editar">
+                                ✏️
+                            </button>
+                            <button class="btn btn-sm" onclick="confirmDeleteTag(${tag.id})" title="Excluir">
+                                🗑️
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderTagFilters() {
+            const container = document.getElementById('tag-filters');
+            const filterText = container.querySelector('.text-muted');
+            
+            // Limpar filtros existentes, mantendo o texto
+            container.innerHTML = '';
+            container.appendChild(filterText);
+            
+            tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = `tag-filter ${tagColors[tag.color].class} ${selectedTags.includes(tag.id) ? 'active' : ''}`;
+                tagEl.textContent = tag.name;
+                tagEl.onclick = () => toggleTagFilter(tag.id);
+                container.appendChild(tagEl);
+            });
+            
+            if (selectedTags.length > 0) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'btn btn-sm';
+                clearBtn.textContent = '❌ Limpar';
+                clearBtn.onclick = clearTagFilters;
+                container.appendChild(clearBtn);
+            }
+        }
+
+        function toggleTagFilter(tagId) {
+            if (selectedTags.includes(tagId)) {
+                selectedTags = selectedTags.filter(id => id !== tagId);
+            } else {
+                selectedTags.push(tagId);
+            }
+            renderTagFilters();
+            performSearch();
+        }
+
+        function clearTagFilters() {
+            selectedTags = [];
+            renderTagFilters();
+            performSearch();
+        }
+
+        function togglePreview(textId) {
+            const preview = document.getElementById(`preview-${textId}`);
+            preview.classList.toggle('hidden');
+        }
+
+        function copyText(textId) {
+            const text = texts.find(t => t.id === textId);
+            if (text) {
+                navigator.clipboard.writeText(text.content);
+                showNotification('Texto copiado para a área de transferência!');
+            }
+        }
+
+        function confirmDeleteText(textId) {
+            if (confirm('Tem certeza que deseja excluir este texto?')) {
+                deleteTextById(textId);
+            }
+        }
+
+        function confirmDeleteTag(tagId) {
+            if (confirm('Tem certeza que deseja excluir esta etiqueta?')) {
+                deleteTagById(tagId);
+            }
+        }
+
+        async function deleteTextById(textId) {
+            try {
+                await deleteText(textId);
+                await loadData();
+                showNotification('Texto excluído com sucesso!');
+            } catch (error) {
+                showNotification('Erro ao excluir texto: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteTagById(tagId) {
+            try {
+                await deleteTag(tagId);
+                await loadData();
+                showNotification('Etiqueta excluída com sucesso!');
+            } catch (error) {
+                showNotification('Erro ao excluir etiqueta: ' + error.message, 'error');
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function updateCounts() {
+            document.getElementById('texts-count').textContent = texts.length;
+            document.getElementById('tags-count').textContent = tags.length;
+        }
+
+        async function loadData() {
+            try {
+                texts = await getAllTexts();
+                tags = await getAllTags();
+                
+                // Associar etiquetas aos textos
+                texts.forEach(text => {
+                    if (text.tagIds) {
+                        text.tags = text.tagIds.map(tagId => tags.find(tag => tag.id === tagId)).filter(Boolean);
+                    }
+                });
+                
+                filteredTexts = [...texts];
+                updateCounts();
+                applySorting();
+                renderTagFilters();
+            } catch (error) {
+                showNotification('Erro ao carregar dados: ' + error.message, 'error');
+            }
+        }
+
+        async function showStats() {
+            const totalTexts = texts.length;
+            const totalTags = tags.length;
+            const totalCharacters = texts.reduce((sum, text) => sum + text.content.length, 0);
+            const totalWords = texts.reduce((sum, text) => sum + text.content.split(/\s+/).filter(word => word.length > 0).length, 0);
+            const averageWordsPerText = totalTexts > 0 ? Math.round(totalWords / totalTexts) : 0;
+            
+            document.getElementById('stats-content').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${totalTexts}</div>
+                        <div class="stat-label">Textos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalTags}</div>
+                        <div class="stat-label">Etiquetas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalCharacters.toLocaleString()}</div>
+                        <div class="stat-label">Caracteres</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalWords.toLocaleString()}</div>
+                        <div class="stat-label">Palavras</div>
+                    </div>
+                    ${totalTexts > 0 ? `
+                        <div class="stat-card">
+                            <div class="stat-value">${averageWordsPerText}</div>
+                            <div class="stat-label">Palavras por texto (média)</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            showModal('stats-modal');
+        }
+
+        async function exportData() {
+            try {
+                // Garantir que temos os dados mais atuais
+                await loadData();
+                
+                const data = {
+                    texts: texts.map(text => ({
+                        ...text,
+                        tags: text.tags || [] // Incluir etiquetas associadas
+                    })),
+                    tags: tags,
+                    exportDate: new Date().toISOString(),
+                    version: '1.0',
+                    totalTexts: texts.length,
+                    totalTags: tags.length
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `gtex-ultimate-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                URL.revokeObjectURL(url);
+                showNotification(`Dados exportados com sucesso! ${texts.length} textos e ${tags.length} etiquetas`);
+            } catch (error) {
+                showNotification('Erro ao exportar dados: ' + error.message, 'error');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('text-content').addEventListener('input', updateCharCount);
+
+        document.getElementById('text-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('text-title').value.trim();
+            const content = document.getElementById('text-content').value.trim();
+            
+            if (!title || !content) {
+                showNotification('Título e conteúdo são obrigatórios!', 'error');
+                return;
+            }
+            
+            const textData = {
+                title,
+                content,
+                tagIds: selectedTags,
+                tags: selectedTags.map(tagId => tags.find(tag => tag.id === tagId)).filter(Boolean)
+            };
+            
+            try {
+                if (editingTextId) {
+                    await updateText(editingTextId, textData);
+                    showNotification('Texto atualizado com sucesso!');
+                } else {
+                    await addText(textData);
+                    showNotification('Texto criado com sucesso!');
+                }
+                
+                await loadData();
+                closeModal('text-modal');
+            } catch (error) {
+                showNotification('Erro ao salvar texto: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('tag-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('tag-name').value.trim();
+            
+            if (!name) {
+                showNotification('Nome da etiqueta é obrigatório!', 'error');
+                return;
+            }
+            
+            // Verificar se já existe uma etiqueta com esse nome (exceto a que está sendo editada)
+            if (tags.some(tag => tag.name.toLowerCase() === name.toLowerCase() && tag.id !== editingTagId)) {
+                showNotification('Já existe uma etiqueta com esse nome!', 'error');
+                return;
+            }
+            
+            const tagData = {
+                name,
+                color: selectedTagColor
+            };
+            
+            try {
+                if (editingTagId) {
+                    await updateTag(editingTagId, tagData);
+                    showNotification('Etiqueta atualizada com sucesso!');
+                } else {
+                    await addTag(tagData);
+                    showNotification('Etiqueta criada com sucesso!');
+                }
+                
+                await loadData();
+                closeModal('tag-modal');
+            } catch (error) {
+                showNotification('Erro ao salvar etiqueta: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('import-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('import-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showNotification('Selecione um arquivo para importar!', 'error');
+                return;
+            }
+            
+            try {
+                const text = await file.text();
+                const data = JSON.parse(text);
+                
+                if (!data.texts || !data.tags) {
+                    throw new Error('Formato de arquivo inválido');
+                }
+                
+                let importedTexts = 0;
+                let importedTags = 0;
+                
+                // Importar etiquetas primeiro (apenas as que não existem)
+                for (const importTag of data.tags) {
+                    const existingTag = tags.find(tag => tag.name.toLowerCase() === importTag.name.toLowerCase());
+                    if (!existingTag) {
+                        const tagData = {
+                            name: importTag.name,
+                            color: importTag.color || 'blue'
+                        };
+                        await addTag(tagData);
+                        importedTags++;
+                    }
+                }
+                
+                // Recarregar etiquetas para obter novos IDs
+                await loadData();
+                
+                // Importar textos (sempre adicionar, nunca substituir, mas evitar duplicatas)
+                for (const importText of data.texts) {
+                    // Verificar se já existe um texto idêntico (mesmo título e conteúdo)
+                // Importar textos (sempre adicionar, nunca substituir, mas evitar duplicatas)
+                for (const importText of data.texts) {
+                    // Verificar se já existe um texto idêntico (mesmo título e conteúdo)
+                    const isDuplicate = texts.some(existingText => 
+                        existingText.title.trim().toLowerCase() === importText.title.trim().toLowerCase() &&
+                        existingText.content.trim().toLowerCase() === importText.content.trim().toLowerCase()
+                    );
+                    
+                    if (!isDuplicate) {
+                        const textData = {
+                            title: importText.title,
+                            content: importText.content,
+                            tagIds: []
+                        };
+                        
+                        // Mapear etiquetas pelos nomes
+                        if (importText.tags) {
+                            textData.tagIds = importText.tags.map(oldTag => {
+                                const newTag = tags.find(tag => tag.name === oldTag.name);
+                                return newTag ? newTag.id : null;
+                            }).filter(Boolean);
+                        }
+                        
+                        await addText(textData);
+                        importedTexts++;
+                    }
+                }
+                
+                await loadData();
+                closeModal('import-modal');
+                showNotification(`Dados importados com sucesso! ${importedTexts} textos e ${importedTags} etiquetas adicionados`);
+            } catch (error) {
+                showNotification('Erro ao importar dados: ' + error.message, 'error');
+            }
+        });
+
+        // Fechar modais clicando fora
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        showTextModal();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportData();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        showImportModal();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        toggleTheme();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    closeModal(modal.id);
+                });
+            }
+        });
+
+        // Inicialização
+        async function init() {
+            try {
+                // Carregar tema salvo
+                const savedTheme = localStorage.getItem('gtex-theme');
+                if (savedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    document.getElementById('theme-toggle').textContent = '☀️';
+                }
+                
+                // Inicializar banco de dados
+                db = await initDB();
+                await loadData();
+                
+                showNotification('Gtex Ultimate carregado com sucesso!');
+            } catch (error) {
+                showNotification('Erro ao inicializar aplicação: ' + error.message, 'error');
+            }
+        }
+
+        // Iniciar aplicação
+        init();
+    </script>
+</body>
+</html>
+
